@@ -1,17 +1,19 @@
 
 var color = "rgb(255,255,255)";
 var branchColor="rgb(0,0,0)";
+var leafColor = "#3c763d";
 var lines = [[window.innerWidth/2,window.innerHeight-20,window.innerWidth/2,window.innerHeight-250]];
 var nextLines = [[window.innerWidth/2,window.innerHeight-20,window.innerWidth/2,window.innerHeight-250]];
 var tempLines = [];
 var l = 150;
+var leafDepth = 2;
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 var iters = 10;
 $('#ex1').slider({});
-var boxSlider = $("#ex1").slider();
+var sizeSlider = $("#ex1").slider();
 $("#ex1").on("slide", function(slideEvt) {
 	iters = slideEvt.value;
    	ctx.fillStyle = color;
@@ -20,19 +22,51 @@ $("#ex1").on("slide", function(slideEvt) {
     generate();
     draw();
 });
+$('#ex2').slider({});
+var leafSlider = $("#ex2").slider();
+$("#ex2").on("slide", function(slideEvt) {
+	leafDepth = slideEvt.value;
+   	ctx.fillStyle = color;
+    console.log(color);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    draw();
+});
 $("#cp4").colorpicker({
 	format: 'rgb'
 }).on('changeColor', function(e) {
 	color = e.color.toString("rgb");
 	draw();
 });
-
+$("#cp6").colorpicker({
+	format: 'rgb'
+}).on('changeColor', function(e) {
+	leafColor = e.color.toString("rgb");
+	draw();
+});
 $("#cp5").colorpicker({
 	format: 'rgb'
 }).on('changeColor', function(e) {
 	branchColor = e.color.toString("rgb");
 	console.log("change");
 	draw();
+});
+$("#hide").click(function() {
+    $("#controls").hide();
+    document.getElementById("hidden").style.display = "inline";
+})
+$("#show").click(function() {
+    $("#controls").show();
+    document.getElementById("hidden").style.display = "none";
+})
+$("#save").click(function() {
+    var canvas = document.getElementById("canvas");
+    var img = canvas.toDataURL("image/png");
+    document.write('<img src="' + img + '"/>');
+})
+$("#fullscreen").click(function() {
+	var elem = document.body; // Make the body go full screen.
+	requestFullScreen(elem);
+	//alert("Fullscreen Recommended for Wallpapers");
 });
 window.onkeyup = function(e) {
     var key = e.keyCode ? e.keyCode : e.which;
@@ -100,12 +134,16 @@ function draw(){
 
 		ctx.lineWidth = width;
 		if(i>=Math.pow(2,iters)-1&&i%2!=0&&document.getElementById("checkBox").checked==true){
+
 			ctx.beginPath();
 			ctx.moveTo(lines[i][2],lines[i][3]);
 			ctx.lineTo(lines[i+1][2],lines[i+1][3]);
 			ctx.stroke();
 		}
 		//console.log(lines[i][0]+" "+lines[i][1]+" "+lines[i][2]+" "+lines[i][3])
+		if(i>Math.pow(2,iters-leafDepth+1)-2){
+			ctx.strokeStyle=leafColor;
+		}	
 		ctx.beginPath();
 		ctx.moveTo(lines[i][0],lines[i][1]);
 		ctx.lineTo(lines[i][2],lines[i][3]);

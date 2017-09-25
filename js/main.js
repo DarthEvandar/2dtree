@@ -79,6 +79,10 @@ window.onkeyup = function(e) {
     draw();
     }
 }
+function refresh(){
+	generate();
+	draw();
+}
 function getRandom(min, max) {
 	return Math.random() * (max - min) + min;
 }

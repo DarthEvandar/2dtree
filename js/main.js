@@ -9,6 +9,9 @@ var l = 150;
 var leafDepth = 2;
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+var di = 0;
+var df = 1;
+var z = 20;
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 var iters = 10;
@@ -18,9 +21,8 @@ $("#ex1").on("slide", function(slideEvt) {
 	iters = slideEvt.value;
    	ctx.fillStyle = color;
     console.log(color);
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    generate();
-    draw();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    refresh();
 });
 $('#ex2').slider({});
 var leafSlider = $("#ex2").slider();
@@ -70,18 +72,25 @@ $("#fullscreen").click(function() {
 });
 window.onkeyup = function(e) {
     var key = e.keyCode ? e.keyCode : e.which;
-
     if (key == 82) {
         ctx.fillStyle = color;
     console.log(color);
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    generate();
-    draw();
+    refresh();
+    //generate();
+    //animate();
     }
 }
+function drawIt(){
+	document.getElementById("animateBox").checked?animate():draw();
+}
 function refresh(){
+	di = 0;
+	df = 1;
+	z = 20;
+	width = 9;
 	generate();
-	draw();
+
 }
 function getRandom(min, max) {
 	return Math.random() * (max - min) + min;
@@ -117,9 +126,40 @@ for(var i=0;i<iters;i++){
 	nextLines = tempLines;
 	tempLines = [];
 }
+	drawIt();
 }
 generate();
-draw();
+//draw();
+//animate();
+var width = 9;
+function animate(){
+
+	if(z==0){
+		z = 20;
+		di = df;
+		df = (df*2)+1;
+		width = width - 1;
+	}
+	if(di>=Math.pow(2,iters-leafDepth)){
+		ctx.strokeStyle=leafColor;
+	}else{
+		ctx.strokeStyle = branchColor;
+	}
+	ctx.lineWidth = width;
+	for(var i=di;i<df;i++){
+		ctx.beginPath();
+		ctx.moveTo(lines[i][0],lines[i][1]);
+		var dx = lines[i][2]-lines[i][0];
+		var dy = lines[i][3]-lines[i][1];
+		ctx.lineTo(lines[i][0]+dx/z,lines[i][1]+dy/z);
+		ctx.stroke();
+	}
+	z--;
+	if(df!=lines.length-1){requestAnimationFrame(animate)}else{
+		//ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //draw();
+   	}
+}
 function draw(){
 	ctx.fillStyle = color;
     console.log(color);

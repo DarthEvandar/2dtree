@@ -89,6 +89,7 @@ function refresh(){
 	df = 1;
 	z = 20;
 	width = 9;
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	generate();
 
 }
@@ -96,8 +97,8 @@ function getRandom(min, max) {
 	return Math.random() * (max - min) + min;
 }
 function generate(){
-lines = [[window.innerWidth/2,window.innerHeight-20,window.innerWidth/2,window.innerHeight-250]];
-nextLines = [[window.innerWidth/2,window.innerHeight-20,window.innerWidth/2,window.innerHeight-250]];
+lines = [[window.innerWidth/2,window.innerHeight-20,window.innerWidth/2,window.innerHeight-250,Math.PI/2]];
+nextLines = [[window.innerWidth/2,window.innerHeight-20,window.innerWidth/2,window.innerHeight-250,Math.PI/2]];
 tempLines = [];
 l=150;
 for(var i=0;i<iters;i++){
@@ -117,10 +118,10 @@ for(var i=0;i<iters;i++){
 			angle1=randomAngle1+Math.atan((nextLines[j][3]-nextLines[j][1])/(nextLines[j][2]-nextLines[j][0]));
 			angle2=Math.atan((nextLines[j][3]-nextLines[j][1])/(nextLines[j][2]-nextLines[j][0]))-randomAngle2;
 		}	
-		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*l),nextLines[j][3]+(Math.sin(angle1)*l)]);
-		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*l),nextLines[j][3]+(Math.sin(angle1)*l)]);
-		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*l),nextLines[j][3]+(Math.sin(angle2)*l)]);
-		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*l),nextLines[j][3]+(Math.sin(angle2)*l)]);
+		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*l),nextLines[j][3]+(Math.sin(angle1)*l),angle1]);
+		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*l),nextLines[j][3]+(Math.sin(angle1)*l),angle1]);
+		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*l),nextLines[j][3]+(Math.sin(angle2)*l),angle2]);
+		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*l),nextLines[j][3]+(Math.sin(angle2)*l),angle2]);
 	}
 	l=l*.75;
 	nextLines = tempLines;
@@ -133,7 +134,6 @@ generate();
 //animate();
 var width = 9;
 function animate(){
-
 	if(z==0){
 		z = 20;
 		di = df;
@@ -177,13 +177,7 @@ function draw(){
 		}
 
 		ctx.lineWidth = width;
-		if(i>=Math.pow(2,iters)-1&&i%2!=0&&document.getElementById("checkBox").checked==true){
-
-			ctx.beginPath();
-			ctx.moveTo(lines[i][2],lines[i][3]);
-			ctx.lineTo(lines[i+1][2],lines[i+1][3]);
-			ctx.stroke();
-		}
+		
 		//console.log(lines[i][0]+" "+lines[i][1]+" "+lines[i][2]+" "+lines[i][3])
 		if(i>Math.pow(2,iters-leafDepth+1)-2){
 			ctx.strokeStyle=leafColor;
@@ -192,7 +186,13 @@ function draw(){
 		ctx.moveTo(lines[i][0],lines[i][1]);
 		ctx.lineTo(lines[i][2],lines[i][3]);
 		ctx.stroke();
-
+		if(i>=Math.pow(2,iters)-1&&document.getElementById("checkBox").checked==true){
+			ctx.beginPath();
+			//ctx.arc(lines[i][0],lines[i][1],Math.sqrt(Math.pow(lines[i][0]-lines[i][2],2)+Math.pow(lines[i][1]-lines[i][3],2)),lines[i][4],lines[i+1][4],lines[i][4]>lines[i+1][4]);
+			ctx.arc(lines[i][2],lines[i][3],Math.sqrt(Math.pow(lines[i][0]-lines[i][2],2)+Math.pow(lines[i][1]-lines[i][3],2)),0,2*Math.PI);
+			ctx.fillStyle = leafColor;
+			ctx.fill();
+		}
 	}
 }
 /*var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.

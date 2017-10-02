@@ -105,6 +105,10 @@ for(var i=0;i<iters;i++){
 	for(var j=0;j<nextLines.length;j++){
 		var randomAngle1 = getRandom(Math.PI/6,Math.PI/3);
 		var randomAngle2 = getRandom(Math.PI/6,Math.PI/3);
+		var randLength1 = document.getElementById("randomLength").checked?getRandom(l*.8,l*1.2):l;
+		var randLength2 = document.getElementById("randomLength").checked?getRandom(l*.8,l*1.2):l;
+		//randLength1 = l;
+		//randLength2 = l;
 		/*var randomAngle1 = getRandom(Math.PI/12,Math.PI/2.5);
 		var randomAngle2 = getRandom(Math.PI/12,Math.PI/2.5);*/
 		//console.log(randomAngle1);
@@ -118,10 +122,10 @@ for(var i=0;i<iters;i++){
 			angle1=randomAngle1+Math.atan((nextLines[j][3]-nextLines[j][1])/(nextLines[j][2]-nextLines[j][0]));
 			angle2=Math.atan((nextLines[j][3]-nextLines[j][1])/(nextLines[j][2]-nextLines[j][0]))-randomAngle2;
 		}	
-		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*l),nextLines[j][3]+(Math.sin(angle1)*l),angle1]);
-		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*l),nextLines[j][3]+(Math.sin(angle1)*l),angle1]);
-		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*l),nextLines[j][3]+(Math.sin(angle2)*l),angle2]);
-		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*l),nextLines[j][3]+(Math.sin(angle2)*l),angle2]);
+		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*randLength1),nextLines[j][3]+(Math.sin(angle1)*randLength1),angle1]);
+		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle1)*randLength1),nextLines[j][3]+(Math.sin(angle1)*randLength1),angle1]);
+		tempLines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*randLength2),nextLines[j][3]+(Math.sin(angle2)*randLength2),angle2]);
+		lines.push([nextLines[j][2],nextLines[j][3],nextLines[j][2]+(Math.cos(angle2)*randLength2),nextLines[j][3]+(Math.sin(angle2)*randLength2),angle2]);
 	}
 	l=l*.75;
 	nextLines = tempLines;
